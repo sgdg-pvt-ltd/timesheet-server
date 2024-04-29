@@ -1,0 +1,87 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Projects {
+  masterProjectId: ID!
+  role: String!
+  masterProjectName: String!
+  projectDescription: String!
+  clientContact: String!
+  masterProjectBudget: Float!
+}
+
+type ProjectOutput {
+  masterProjectId: ID!
+  role: UserRole!
+  masterProjectName: String!
+  projectDescription: String
+  clientContact: String
+  masterProjectBudget: Float
+}
+
+enum UserRole {
+  superAdmin
+  masterAdmin
+  unitAdmin
+  normalAdmin
+}
+
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  password: String!
+  resetToken: String!
+}
+
+type Client {
+  clientId: ID!
+  clientName: String!
+  clientContact: String!
+  projectList: [Projects!]
+}
+
+type Query {
+  projects: [ProjectOutput!]!
+  project(id: String!): ProjectOutput!
+  user(id: String!): String!
+  clients: [Client!]!
+  client(clientId: String!): Client!
+}
+
+type Mutation {
+  createProject(data: ProjectInput!): ProjectOutput!
+  updateProject(data: ProjectInput!, id: String!): ProjectOutput!
+  createClient(clientInput: ClientInput!): Client!
+  updateClient(clientId: String!, clientInput: ClientInput!): Client!
+  removeClient(clientId: String!): Boolean!
+  signIn(signInInput: SigninInput!): String!
+  signUp(signUpInput: SignupInput!): User!
+}
+
+input ProjectInput {
+  masterProjectName: String!
+  role: UserRole!
+  projectDescription: String
+  clientContact: String
+  masterProjectBudget: Float
+}
+
+input ClientInput {
+  clientName: String
+  clientContact: String
+  projectList: [ProjectInput!]
+}
+
+input SigninInput {
+  email: String!
+  password: String!
+}
+
+input SignupInput {
+  username: String
+  email: String!
+  password: String!
+  confirmPassword: String!
+}
