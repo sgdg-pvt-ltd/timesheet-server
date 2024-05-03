@@ -5,7 +5,7 @@ import { Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 @Entity()
 export class User {
     @PrimaryGeneratedColumn('uuid')
-    @Field(() => ID)
+    @Field()
     id: string;
 
     @Column({nullable: true})
@@ -23,4 +23,5 @@ export class User {
     @Column({ default: '' })
     @Field()
     resetToken: string
+  filter: any;
 }

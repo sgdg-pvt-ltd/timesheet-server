@@ -33,6 +33,7 @@
     "bcrypt": "^5.1.1",
     "class-validator": "^0.14.1",
     "dataloader": "^2.2.2",
+    "dotenv": "^16.4.5",
     "email-validator": "^2.0.4",
     "graphql": "^16.8.1",
     "graphql-tools": "^9.0.1",

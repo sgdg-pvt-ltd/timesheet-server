@@ -1,4 +1,6 @@
+require('dotenv').config();
+
 export const jwtConstants = {
-    secret: 'testing-task-manager-app',
+    secret: process.env.JWT_SECRET_KEY,
   };
   

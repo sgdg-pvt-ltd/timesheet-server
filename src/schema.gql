@@ -28,7 +28,7 @@ enum UserRole {
 }
 
 type User {
-  id: ID!
+  id: String!
   username: String!
   email: String!
   password: String!
@@ -45,7 +45,7 @@ type Client {
 type Query {
   projects: [ProjectOutput!]!
   project(id: String!): ProjectOutput!
-  user(id: String!): String!
+  users(limit: Int!, offset: Int!): [User!]!
   clients: [Client!]!
   client(clientId: String!): Client!
 }

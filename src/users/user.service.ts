@@ -27,30 +27,18 @@ export class UserService {
   async findOne(email: string) {
     return await this.userRepository.findOne({where:{ email }});
   }
-
-  async findManyById(usersId: string[]) {
-    return await this.userRepository
-      .createQueryBuilder()
-      .select('username')
-      .where('id IN (:...ids)', { ids: usersId })
-      .getMany();
-  }
-
-//   async update(id: string, updateUserDto: UpdateUserDto) {
-//     await this.userRepository.update(
-//       { id },
-      
-//          {
-//           username: updateUserDto.username,
-//         },
-      
-//     );
-
-//     const updatedUser = await this.getById(id);
-//     return {username: updatedUser.username, }
-//   }
-
-//   async delete(id: string) {
-//     return await this.userRepository.delete(id);
-//   }
+  async findManyById(limit: number, offset: number): Promise<User[]> {
+    console.log('abcd');  
+    try {
+       const response = await this.userRepository
+         .createQueryBuilder("user")
+         .where("user.id IN (:...ids)", { ids: Array.from({ length: limit }, (_, i) => String(offset + i)) })
+         .getMany();
+       console.log(response, 'response');
+       return response;
+    } catch (error) {
+       console.error('Error executing query:', error);
+       throw error; 
+    }
+   }
 }

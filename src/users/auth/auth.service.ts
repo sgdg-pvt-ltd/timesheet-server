@@ -23,13 +23,13 @@ export class AuthService {
   async validateUser(loginUserDto: SigninInput) {
     const user = await this.userService.findOne(loginUserDto.email.toLowerCase())
     if (!user) {
-      throw { message: 'Email not found', statusCode: HttpStatus.NOT_FOUND };
+      throw new HttpException(ErrorMessage.EMAIL_NOT_FOUND,  HttpStatus.NOT_FOUND );
     }
     const passwordMatch = await this.bcryptService.comparePassword(loginUserDto.password, user.password);
     if (passwordMatch) {
       return { message: 'Authentication successful', statusCode: HttpStatus.OK };
     } else {
-      throw { message: 'Incorrect password', statusCode: HttpStatus.UNAUTHORIZED };
+      throw new HttpException(ErrorMessage.PASSWORD_INCORRECT,  HttpStatus.NOT_FOUND );
     }
   }
 
@@ -43,7 +43,6 @@ export class AuthService {
         statusCode: HttpStatus.OK,
       };
     } catch (error) {
-      console.log(error, 'check error');
       throw { message: error.message, statusCode: error.statusCode };
     }
   }
