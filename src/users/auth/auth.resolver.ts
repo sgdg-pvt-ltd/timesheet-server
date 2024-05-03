@@ -11,7 +11,7 @@ export class AuthResolver {
   constructor(private authService: AuthService) {}
 
   
-  @UseGuards(LocalAuthGuard)
+  // @UseGuards(LocalAuthGuard)
   @Mutation(() => String)
   async signIn(@Args('signInInput') SignInInput: SigninInput ) {
     const { access_token } = await this.authService.login(SignInInput);
