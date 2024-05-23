@@ -9,6 +9,8 @@ import { ProjectModule } from './project/projects.module'
 import { UserModule } from './users/user.module'
 import { ClientModule } from './client/clinet.module'
 import { AuthModule } from './users/auth/auth.module'
+import { InvitationModule } from './invitation/invitation.module'
+import { OrganizationModule } from './organization/organization.module'
 require('dotenv').config();
 
 
@@ -18,6 +20,8 @@ require('dotenv').config();
     UserModule,
     ClientModule,
     AuthModule,
+    InvitationModule,
+    OrganizationModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,

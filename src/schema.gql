@@ -27,12 +27,19 @@ enum UserRole {
   normalAdmin
 }
 
+type Organization {
+  id: ID!
+  name: String!
+  users: [User]
+}
+
 type User {
   id: String!
   username: String!
   email: String!
   password: String!
   resetToken: String!
+  organization: Organization!
 }
 
 type Client {
@@ -42,12 +49,19 @@ type Client {
   projectList: [Projects!]
 }
 
+type InvitationResponse {
+  email: String!
+  organizationId: Int!
+}
+
 type Query {
   projects: [ProjectOutput!]!
   project(id: String!): ProjectOutput!
   users(limit: Int!, offset: Int!): [User!]!
   clients: [Client!]!
   client(clientId: String!): Client!
+  organizations: [Organization!]!
+  organization(id: String!): Organization!
 }
 
 type Mutation {
@@ -58,6 +72,10 @@ type Mutation {
   removeClient(clientId: String!): Boolean!
   signIn(signInInput: SigninInput!): String!
   signUp(signUpInput: SignupInput!): User!
+  inviteUser(email: String!, organizationId: String!): InvitationResponse!
+  createOrganization(createOrganizationDto: CreateOrganizationDto!): Organization!
+  updateOrganization(updateOrganizationDto: UpdateOrganizationDto!): Organization!
+  removeOrganization(id: String!): Boolean!
 }
 
 input ProjectInput {
@@ -84,4 +102,13 @@ input SignupInput {
   email: String!
   password: String!
   confirmPassword: String!
+}
+
+input CreateOrganizationDto {
+  name: String!
+}
+
+input UpdateOrganizationDto {
+  name: String
+  id: String!
 }
