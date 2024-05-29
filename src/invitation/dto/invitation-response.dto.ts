@@ -1,10 +1,11 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Invitation } from '../entities/invitation.entity';
 
 @ObjectType()
 export class InvitationResponse {
-  @Field()
-  email: string;
+  @Field(() => Invitation)
+  invitation: Invitation;
 
-  @Field(() => Int)
-  organizationId: string;
+  @Field()
+  token: string;
 }

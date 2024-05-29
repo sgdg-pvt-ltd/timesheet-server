@@ -1,12 +1,13 @@
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { InvitationService } from './invitation.service';
 import { InvitationResponse } from './dto/invitation-response.dto';
+import { Invitation } from './entities/invitation.entity';
 
 @Resolver()
 export class InvitationResolver {
   constructor(private readonly invitationService: InvitationService) {}
 
-  @Mutation(returns => InvitationResponse)
+  @Mutation(() => InvitationResponse)
   async inviteUser(
     @Args('email') email: string,
     @Args('organizationId') organizationId: string,

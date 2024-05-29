@@ -11,6 +11,9 @@ import { ClientModule } from './client/clinet.module'
 import { AuthModule } from './users/auth/auth.module'
 import { InvitationModule } from './invitation/invitation.module'
 import { OrganizationModule } from './organization/organization.module'
+import { MailerModule } from './mailer/mail.module'
+import { JwtModule } from '@nestjs/jwt'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 require('dotenv').config();
 
 
@@ -20,8 +23,10 @@ require('dotenv').config();
     UserModule,
     ClientModule,
     AuthModule,
+    MailerModule,
     InvitationModule,
     OrganizationModule,
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
