@@ -21,10 +21,6 @@ export class InvitationService {
   ) {}
 
   async sendInvitation(email: string, organizationId: string): Promise<InvitationResponse> {
-    const emailExist = await this.invitationRepository.findOne({where:{email}})
-    if(emailExist){
-      throw new HttpException(ErrorMessage.EMAIL_EXISTS, HttpStatus.BAD_REQUEST)
-    }
     const organization = await this.organizationRepository.findOne({
       where: { id: organizationId },
     });
