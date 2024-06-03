@@ -49,9 +49,15 @@ type Client {
   projectList: [Projects!]
 }
 
-type InvitationResponse {
+type Invitation {
+  id: String!
   email: String!
-  organizationId: Int!
+  organizationId: String!
+}
+
+type InvitationResponse {
+  invitation: Invitation!
+  token: String!
 }
 
 type Query {
