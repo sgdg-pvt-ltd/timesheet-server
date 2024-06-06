@@ -60,6 +60,13 @@ type InvitationResponse {
   token: String!
 }
 
+type Admin {
+  id: String!
+  username: String!
+  password: String!
+  role: UserRole!
+}
+
 type Query {
   projects: [ProjectOutput!]!
   project(id: String!): ProjectOutput!
@@ -68,6 +75,8 @@ type Query {
   client(clientId: String!): Client!
   organizations: [Organization!]!
   organization(id: String!): Organization!
+  findAllAdmins: [Admin!]!
+  findOneAdmin(id: String!): Admin!
 }
 
 type Mutation {
@@ -79,9 +88,12 @@ type Mutation {
   signIn(signInInput: SigninInput!): String!
   signUp(signUpInput: SignupInput!): User!
   inviteUser(email: String!, organizationId: String!): InvitationResponse!
-  createOrganization(createOrganizationDto: CreateOrganizationDto!): Organization!
+  createOrganization(createOrganizationDto: CreateOrganizationDto!, adminId: String!): Organization!
   updateOrganization(updateOrganizationDto: UpdateOrganizationDto!): Organization!
   removeOrganization(id: String!): Boolean!
+  createAdmin(createAdmin: CreateAdminDto!): Admin!
+  updateAdmin(id: String!, updateAdmin: UpdateAdminDto!): Admin!
+  removeAdmin(id: Int!): Boolean!
 }
 
 input ProjectInput {
@@ -117,4 +129,14 @@ input CreateOrganizationDto {
 input UpdateOrganizationDto {
   name: String
   id: String!
+}
+
+input CreateAdminDto {
+  username: String!
+  password: String!
+}
+
+input UpdateAdminDto {
+  username: String
+  password: String
 }
