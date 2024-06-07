@@ -29,9 +29,12 @@ export class OrganizationResolver {
     return this.organizationService.update(updateOrganizationDto.id, updateOrganizationDto);
   }
 
-  @Mutation(returns => Boolean)
-  async removeOrganization(@Args('id') id: string): Promise<boolean> {
-    await this.organizationService.remove(id);
+  @Mutation(() => Boolean)
+  async softDeleteOrganization(
+    @Args('id') id: string,
+    @Args('adminId') adminId: string,
+  ): Promise<boolean> {
+    await this.organizationService.softDelete(id, adminId);
     return true;
   }
 }

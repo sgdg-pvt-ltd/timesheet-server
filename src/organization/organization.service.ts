@@ -47,7 +47,16 @@ export class OrganizationService {
     });
   }
 
-  async remove(id: string): Promise<void> {
-    await this.organizationRepository.delete(id);
+  async softDelete(id: string, adminId: string): Promise<void> {
+    const admin = await this.adminRepository.findOne({ where: { id: adminId } });
+    if (!admin || admin.role !== UserRole.superAdmin) {
+      throw new UnauthorizedException('Only super admins can delete organizations');
+    }
+
+    const result = await this.organizationRepository.softDelete(id);
+    if (result.affected === 0) {
+      throw new HttpException(`Organization with ID "${id}" not found`, HttpStatus.BAD_REQUEST);
+
+    }
   }
 }

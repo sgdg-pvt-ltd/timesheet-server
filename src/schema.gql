@@ -31,7 +31,13 @@ type Organization {
   id: ID!
   name: String!
   users: [User]
+  deletedAt: DateTime
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type User {
   id: String!
@@ -90,7 +96,7 @@ type Mutation {
   inviteUser(email: String!, organizationId: String!): InvitationResponse!
   createOrganization(createOrganizationDto: CreateOrganizationDto!, adminId: String!): Organization!
   updateOrganization(updateOrganizationDto: UpdateOrganizationDto!): Organization!
-  removeOrganization(id: String!): Boolean!
+  softDeleteOrganization(id: String!, adminId: String!): Boolean!
   createAdmin(createAdmin: CreateAdminDto!): Admin!
   updateAdmin(id: String!, updateAdmin: UpdateAdminDto!): Admin!
   removeAdmin(id: Int!): Boolean!
