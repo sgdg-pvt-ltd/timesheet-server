@@ -50,12 +50,12 @@ export class OrganizationService {
   async softDelete(id: string, adminId: string): Promise<void> {
     const admin = await this.adminRepository.findOne({ where: { id: adminId } });
     if (!admin || admin.role !== UserRole.superAdmin) {
-      throw new UnauthorizedException('Only super admins can delete organizations');
+      throw new HttpException(ErrorMessage.SUPERADMIN_DELETE, HttpStatus.BAD_REQUEST);
     }
 
     const result = await this.organizationRepository.softDelete(id);
     if (result.affected === 0) {
-      throw new HttpException(`Organization with ID "${id}" not found`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(ErrorMessage.ORGANIZATION_NOT_FOUND, HttpStatus.BAD_REQUEST);
 
     }
   }
