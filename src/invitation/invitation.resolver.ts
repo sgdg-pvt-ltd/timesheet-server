@@ -1,7 +1,8 @@
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { InvitationService } from './invitation.service';
 import { InvitationResponse } from './dto/invitation-response.dto';
-import { Invitation } from './entities/invitation.entity';
+import { UserRole } from 'src/common/role';
+import { CreateInvitationDto } from './dto/create-invitation.dto';
 
 @Resolver()
 export class InvitationResolver {
@@ -9,11 +10,10 @@ export class InvitationResolver {
 
   @Mutation(() => InvitationResponse)
   async inviteUser(
-    @Args('email') email: string,
-    @Args('organizationId') organizationId: string,
-  ) {
-    const result = await this.invitationService.sendInvitation(email, organizationId);
-    return result;
+    @Args('createInvitationInput') createInvitationDto: CreateInvitationDto
+  ): Promise<InvitationResponse> {
+    const { email, organizationId, role } = createInvitationDto;
+    return this.invitationService.sendInvitation(email, organizationId, role);
   }
 }
 

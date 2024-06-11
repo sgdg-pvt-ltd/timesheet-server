@@ -1,23 +1,23 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { UserRole } from 'src/common/role';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @ObjectType()
 @Entity()
-export class Invitation {
-  @Field()
+export class Admin {
   @PrimaryGeneratedColumn('uuid')
+  @Field()
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   @Field()
-  email: string;
+  username: string;
 
   @Column()
   @Field()
-  organizationId: string;
+  password: string;
 
-  @Column({ type: 'enum', enum: UserRole})
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.superAdmin })
   @Field(() => UserRole) 
   role: UserRole;
 }

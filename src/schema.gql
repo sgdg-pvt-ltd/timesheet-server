@@ -31,7 +31,13 @@ type Organization {
   id: ID!
   name: String!
   users: [User]
+  deletedAt: DateTime
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type User {
   id: String!
@@ -53,11 +59,19 @@ type Invitation {
   id: String!
   email: String!
   organizationId: String!
+  role: UserRole!
 }
 
 type InvitationResponse {
   invitation: Invitation!
   token: String!
+}
+
+type Admin {
+  id: String!
+  username: String!
+  password: String!
+  role: UserRole!
 }
 
 type Query {
@@ -68,6 +82,8 @@ type Query {
   client(clientId: String!): Client!
   organizations: [Organization!]!
   organization(id: String!): Organization!
+  findAllAdmins: [Admin!]!
+  findOneAdmin(id: String!): Admin!
 }
 
 type Mutation {
@@ -78,10 +94,13 @@ type Mutation {
   removeClient(clientId: String!): Boolean!
   signIn(signInInput: SigninInput!): String!
   signUp(signUpInput: SignupInput!): User!
-  inviteUser(email: String!, organizationId: String!): InvitationResponse!
-  createOrganization(createOrganizationDto: CreateOrganizationDto!): Organization!
+  inviteUser(createInvitationInput: CreateInvitationDto!): InvitationResponse!
+  createOrganization(createOrganizationDto: CreateOrganizationDto!, adminId: String!): Organization!
   updateOrganization(updateOrganizationDto: UpdateOrganizationDto!): Organization!
-  removeOrganization(id: String!): Boolean!
+  softDeleteOrganization(id: String!, adminId: String!): Boolean!
+  createAdmin(createAdmin: CreateAdminDto!): Admin!
+  updateAdmin(id: String!, updateAdmin: UpdateAdminDto!): Admin!
+  removeAdmin(id: Int!): Boolean!
 }
 
 input ProjectInput {
@@ -110,6 +129,12 @@ input SignupInput {
   confirmPassword: String!
 }
 
+input CreateInvitationDto {
+  email: String!
+  organizationId: String!
+  role: UserRole!
+}
+
 input CreateOrganizationDto {
   name: String!
 }
@@ -117,4 +142,14 @@ input CreateOrganizationDto {
 input UpdateOrganizationDto {
   name: String
   id: String!
+}
+
+input CreateAdminDto {
+  username: String!
+  password: String!
+}
+
+input UpdateAdminDto {
+  username: String
+  password: String
 }

@@ -9,7 +9,7 @@ import { Organization } from 'src/organization/entities/organization.entity';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Invitation, Organization]), MailerModule, ConfigModule,JwtModule],
+  imports: [TypeOrmModule.forFeature([Invitation, Organization]), MailerModule, ConfigModule, JwtModule],
   providers: [InvitationService, InvitationResolver],
 })
 export class InvitationModule {}
