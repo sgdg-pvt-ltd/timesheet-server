@@ -15,16 +15,20 @@ export class OrganizationService {
     private readonly organizationRepository: Repository<Organization>,
     @InjectRepository(Admin)
     private readonly adminRepository: Repository<Admin>,
-
-
   ) {}
 
   async create(createOrganizationDto: CreateOrganizationDto, adminId: string): Promise<Organization> {
+    const {name} = createOrganizationDto
+    const lowerCaseName = name.toLowerCase();
+    const exsitsName =  await this.organizationRepository.findOne({where: {name: name.toLowerCase()}})
+    if(exsitsName){
+      throw new HttpException(ErrorMessage.ORGANIZATION_NAME_EXISTS, HttpStatus.BAD_REQUEST);
+    }
     const admin = await this.adminRepository.findOne({where: {id: adminId}})
     if(!admin || admin.role !== UserRole.superAdmin){
       throw new HttpException(ErrorMessage.SUPERADMIN_PERMISSION, HttpStatus.BAD_REQUEST);
     }
-    const organization = this.organizationRepository.create(createOrganizationDto);
+    const organization = this.organizationRepository.create({...createOrganizationDto, name:lowerCaseName});
     return this.organizationRepository.save(organization);
   }
 

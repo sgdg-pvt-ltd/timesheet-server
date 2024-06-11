@@ -8,6 +8,7 @@ import { Organization } from 'src/organization/entities/organization.entity';
 import ErrorMessage from 'src/common/error-message';
 import { InvitationResponse } from './dto/invitation-response.dto';
 import * as jwt from 'jsonwebtoken';
+import { UserRole } from 'src/common/role';
 
 @Injectable()
 export class InvitationService {
@@ -20,18 +21,18 @@ export class InvitationService {
     private readonly configService: ConfigService,
   ) {}
 
-  async sendInvitation(email: string, organizationId: string): Promise<InvitationResponse> {
+  async sendInvitation(email: string, organizationId: string, role:UserRole): Promise<InvitationResponse> {
     const organization = await this.organizationRepository.findOne({
       where: { id: organizationId },
     });
     if (!organization) {
       throw new HttpException(ErrorMessage.ORGANIZATION_NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
-    const invitation = this.invitationRepository.create({ email, organizationId });
+    const invitation = this.invitationRepository.create({ email, organizationId, role });
     await this.invitationRepository.save(invitation);
     
     const secretKey = this.configService.get<string>('JWT_SECRET_KEY');
-    const token = jwt.sign({ invitationId: invitation.id, email, organizationId }, secretKey, {
+    const token = jwt.sign({ invitationId: invitation.id, email, organizationId, role }, secretKey, {
       expiresIn: '1h',
     });
     await this.sendInvitationEmail(email, invitation.id);
