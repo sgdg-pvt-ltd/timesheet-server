@@ -46,7 +46,7 @@ type User {
   password: String!
   resetToken: String!
   organizationId: String!
-  role: String!
+  role: UserRole!
   organization: Organization!
 }
 

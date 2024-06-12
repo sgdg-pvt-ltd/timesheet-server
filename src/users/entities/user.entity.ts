@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Organization } from '../../organization/entities/organization.entity';
+import { UserRole } from 'src/common/role';
 
 @ObjectType()
 @Entity()
@@ -28,15 +29,15 @@ export class User {
 
   @Column()
   @Field()
-  organizationId: string; // Added field for organization ID
+  organizationId: string; 
 
-  @Column()
-  @Field()
-  role: string; // Added field for user role
+ 
+  @Column({ type: 'enum', enum: UserRole})
+  @Field(() => UserRole) 
+  role: UserRole;
 
   @Field(() => Organization)
   @ManyToOne(() => Organization, organization => organization.users)
-  organization?: Organization; // Optional since it's now also stored as organizationId
+  organization?: Organization; 
 
-  // Other fields...
 }
