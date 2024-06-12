@@ -45,6 +45,8 @@ type User {
   email: String!
   password: String!
   resetToken: String!
+  organizationId: String!
+  role: String!
   organization: Organization!
 }
 
@@ -95,6 +97,7 @@ type Mutation {
   signIn(signInInput: SigninInput!): String!
   signUp(signUpInput: SignupInput!): User!
   inviteUser(createInvitationInput: CreateInvitationDto!): InvitationResponse!
+  acceptInvitation(acceptInvitationInput: AcceptInvitationDto!): User!
   createOrganization(createOrganizationDto: CreateOrganizationDto!, adminId: String!): Organization!
   updateOrganization(updateOrganizationDto: UpdateOrganizationDto!): Organization!
   softDeleteOrganization(id: String!, adminId: String!): Boolean!
@@ -133,6 +136,11 @@ input CreateInvitationDto {
   email: String!
   organizationId: String!
   role: UserRole!
+}
+
+input AcceptInvitationDto {
+  password: String!
+  confirmPassword: String!
 }
 
 input CreateOrganizationDto {

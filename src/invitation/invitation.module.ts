@@ -7,9 +7,10 @@ import { MailerModule } from 'src/mailer/mail.module';
 import { ConfigModule } from '@nestjs/config';
 import { Organization } from 'src/organization/entities/organization.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { User } from 'src/users/entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Invitation, Organization]), MailerModule, ConfigModule, JwtModule],
+  imports: [TypeOrmModule.forFeature([Invitation, Organization, User]), MailerModule, ConfigModule, JwtModule],
   providers: [InvitationService, InvitationResolver],
 })
 export class InvitationModule {}

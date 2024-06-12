@@ -23,10 +23,20 @@ export class User {
 
   @Column({ default: '' })
   @Field()
-  resetToken: string
-  filter: any;
+  resetToken: string;
+  filter: any
+
+  @Column()
+  @Field()
+  organizationId: string; // Added field for organization ID
+
+  @Column()
+  @Field()
+  role: string; // Added field for user role
 
   @Field(() => Organization)
   @ManyToOne(() => Organization, organization => organization.users)
-  organization: Organization;
+  organization?: Organization; // Optional since it's now also stored as organizationId
+
+  // Other fields...
 }
