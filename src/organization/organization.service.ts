@@ -33,7 +33,7 @@ export class OrganizationService {
   }
 
   findAll(): Promise<Organization[]> {
-    return this.organizationRepository.find({ relations: ['users'] });
+    return this.organizationRepository.find({ relations: ['users'],  order: { createdAt: 'ASC' }  });
   }
 
   findOne(id: string): Promise<Organization> {
@@ -44,6 +44,9 @@ export class OrganizationService {
   }
 
   async update(id: string, updateOrganizationDto: UpdateOrganizationDto): Promise<Organization> {
+    if (updateOrganizationDto.name) {
+      updateOrganizationDto.name = updateOrganizationDto.name.toLowerCase();
+    }
     await this.organizationRepository.update(id, updateOrganizationDto);
     return this.organizationRepository.findOne({
       where: { id },
