@@ -27,7 +27,7 @@ export class AuthService {
     }
     const passwordMatch = await this.bcryptService.comparePassword(loginUserDto.password, user.password);
     if (passwordMatch) {
-      return { message: 'Authentication successful', statusCode: HttpStatus.OK };
+      return user
     } else {
       throw new HttpException(ErrorMessage.PASSWORD_INCORRECT,  HttpStatus.NOT_FOUND );
     }
@@ -35,8 +35,12 @@ export class AuthService {
 
   async login(loginUserDto: SigninInput) {    
     try {
-      await this.validateUser(loginUserDto);
-      const payload = { email: loginUserDto.email };
+      const user = await this.validateUser(loginUserDto);
+      const payload = { 
+        email: user.email,
+        id: user.id,
+        organizationId: user.organizationId,
+      };
       return {
         access_token: this.jwtService.sign(payload),
         message: 'Authentication successful',

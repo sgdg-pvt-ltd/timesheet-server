@@ -71,6 +71,11 @@ export class InvitationService {
 
     const { invitationId, email } = payload;
 
+    const emailExists = await this. userRepository.findOne({ where: { email: email}})
+    if(emailExists) {
+      throw new HttpException('Email already exists no need to add paasword again', HttpStatus.BAD_REQUEST); 
+    }
+
     const invitation = await this.invitationRepository.findOne({ where: { id: invitationId, email } });
     if (!invitation) {
       throw new HttpException('Invalid invitation', HttpStatus.BAD_REQUEST);
