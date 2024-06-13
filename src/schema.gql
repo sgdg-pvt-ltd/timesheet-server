@@ -32,6 +32,8 @@ type Organization {
   name: String!
   users: [User]
   deletedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 """
@@ -48,6 +50,8 @@ type User {
   organizationId: String!
   role: UserRole!
   organization: Organization!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Client {
@@ -74,6 +78,8 @@ type Admin {
   username: String!
   password: String!
   role: UserRole!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Query {

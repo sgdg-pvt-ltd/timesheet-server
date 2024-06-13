@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Organization } from '../../organization/entities/organization.entity';
 import { UserRole } from 'src/common/role';
 
@@ -39,5 +39,13 @@ export class User {
   @Field(() => Organization)
   @ManyToOne(() => Organization, organization => organization.users)
   organization?: Organization; 
+
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  @Field()
+  updatedAt: Date;
 
 }
