@@ -4,6 +4,7 @@ import { Organization } from './entities/organization.entity';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
 import { UserRole } from 'src/common/role';
+import { SwitchUserOrganizationDto } from './dto/switch-user-organization.dto';
 
 @Resolver(of => Organization)
 export class OrganizationResolver {
@@ -36,5 +37,13 @@ export class OrganizationResolver {
   ): Promise<boolean> {
     await this.organizationService.softDelete(id, adminId);
     return true;
+  }
+
+  @Mutation(() => String)
+  async switchUserOrganization(
+    @Args('switchUserOrganizationDto') switchUserOrganizationDto: SwitchUserOrganizationDto,
+  ): Promise<string> {
+    const { token } = await this.organizationService.switchUserOrganization(switchUserOrganizationDto);
+    return token;
   }
 }

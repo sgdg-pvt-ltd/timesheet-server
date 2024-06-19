@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import ErrorMessage from 'src/common/error-message';
 import { validateEmail, validatePassword } from 'src/validations/singup-validation.helper';
+import { SignInResponseDto } from '../dto/signin-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -33,21 +34,26 @@ export class AuthService {
     }
   }
 
-  async login(loginUserDto: SigninInput) {    
+  async login(loginUserDto: SigninInput): Promise<SignInResponseDto> {
     try {
       const user = await this.validateUser(loginUserDto);
-      const payload = { 
+      const payload = {
+        email: user.email,
+        id: user.id,
+        organizationId: user.organizationId,
+
+      };
+      const accessToken = this.jwtService.sign(payload);
+      const response: SignInResponseDto = {
+        token: accessToken,
         email: user.email,
         id: user.id,
         organizationId: user.organizationId,
       };
-      return {
-        access_token: this.jwtService.sign(payload),
-        message: 'Authentication successful',
-        statusCode: HttpStatus.OK,
-      };
+
+      return response;
     } catch (error) {
-      throw { message: error.message, statusCode: error.statusCode };
+      throw new Error(`Authentication failed: ${error.message}`);
     }
   }
 

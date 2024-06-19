@@ -4,12 +4,16 @@ const INVALID_PASSWORD = "Password must be at least 6 characters long, contain a
 const EMAIL_EXISTS = "Email already Exists";
 const EMAIL_NOT_FOUND = "Email not Found";
 const PASSWORD_INCORRECT = "Password is Incorrect";
-const PASSWORD_MISMATCH = "Password doesnot match";
-const INVALID_RESET_TOKEN = "Invalid Token";
-const ORGANIZATION_NAME_EXISTS = "Organization name already exists"
+const PASSWORD_MISMATCH = "Password does not match";
+const ORGANIZATION_NAME_EXISTS = "Organization already exists"
 const ORGANIZATION_NOT_FOUND = 'Organization not found';
 const SUPERADMIN_PERMISSION = 'Only super admins can create organizations'
 const SUPERADMIN_DELETE = 'Only super admins can delete organizations'
+const INVITATION_ID_NOT_FOUND= 'Invitation Id not found'
+
+//token
+const INVALID_TOKEN = "Invalid Token";
+
 
 const ErrorMessage = {
     FILL_ALL_DATA,
@@ -19,11 +23,12 @@ const ErrorMessage = {
     EMAIL_NOT_FOUND,
     PASSWORD_INCORRECT,
     PASSWORD_MISMATCH,
-    INVALID_RESET_TOKEN,
+    INVALID_TOKEN,
     ORGANIZATION_NAME_EXISTS,
     ORGANIZATION_NOT_FOUND,
     SUPERADMIN_PERMISSION,
     SUPERADMIN_DELETE,
+    INVITATION_ID_NOT_FOUND,
 }
 
 export default ErrorMessage

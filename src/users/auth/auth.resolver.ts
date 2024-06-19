@@ -3,19 +3,20 @@ import { AuthService } from './auth.service';
 import { SignupInput } from '../dto/sighnup-dto';
 import { SigninInput } from '../dto/signin-dto';
 import { User } from '../entities/user.entity';
-import { UseGuards } from '@nestjs/common';
-import { LocalAuthGuard } from './local-auth.guard';
+import { SignInResponseDto } from '../dto/signin-response.dto';
 
 @Resolver()
 export class AuthResolver {
   constructor(private authService: AuthService) {}
 
   
-  // @UseGuards(LocalAuthGuard)
-  @Mutation(() => String)
-  async signIn(@Args('signInInput') SignInInput: SigninInput ) {
-    const { access_token } = await this.authService.login(SignInInput);
-    return access_token;
+  @Mutation(() => SignInResponseDto)
+  async signIn(@Args('signInInput') signInInput: SigninInput): Promise<SignInResponseDto> {
+    try {
+      return await this.authService.login(signInInput);
+    } catch (error) {
+      throw new Error(`Failed to sign in: ${error.message}`);
+    }
   }
   @Mutation(() => User)
   async signUp(

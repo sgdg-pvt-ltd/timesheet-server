@@ -66,23 +66,26 @@ export class InvitationService {
     try {
       payload = jwt.verify(token, secretKey);
     } catch (e) {
-      throw new HttpException('Invalid or expired token', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ErrorMessage.INVALID_TOKEN, HttpStatus.BAD_REQUEST);
     }
 
     const { invitationId, email } = payload;
 
     const emailExists = await this. userRepository.findOne({ where: { email: email}})
-    if(emailExists) {
-      throw new HttpException('Email already exists no need to add paasword again', HttpStatus.BAD_REQUEST); 
+    if (emailExists) {
+      emailExists.organizationId = payload.organizationId; 
+      emailExists.role = payload.role
+      await this.userRepository.save(emailExists);
+      return emailExists;
     }
 
     const invitation = await this.invitationRepository.findOne({ where: { id: invitationId, email } });
     if (!invitation) {
-      throw new HttpException('Invalid invitation', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ErrorMessage.INVITATION_ID_NOT_FOUND, HttpStatus.BAD_REQUEST);
     }
 
     if (password !== confirmPassword) {
-      throw new HttpException('Passwords do not match', HttpStatus.BAD_REQUEST);
+      throw new HttpException(ErrorMessage.PASSWORD_MISMATCH, HttpStatus.BAD_REQUEST);
     }
 
     const hashedPassword = await this.bcryptService.hashingPassword(password);

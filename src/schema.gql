@@ -61,6 +61,13 @@ type Client {
   projectList: [Projects!]
 }
 
+type SignInResponseDto {
+  email: String!
+  id: String!
+  organizationId: String!
+  token: String!
+}
+
 type Invitation {
   id: String!
   email: String!
@@ -100,13 +107,14 @@ type Mutation {
   createClient(clientInput: ClientInput!): Client!
   updateClient(clientId: String!, clientInput: ClientInput!): Client!
   removeClient(clientId: String!): Boolean!
-  signIn(signInInput: SigninInput!): String!
+  signIn(signInInput: SigninInput!): SignInResponseDto!
   signUp(signUpInput: SignupInput!): User!
   inviteUser(createInvitationInput: CreateInvitationDto!): InvitationResponse!
   acceptInvitation(acceptInvitationInput: AcceptInvitationDto!): User!
   createOrganization(createOrganizationDto: CreateOrganizationDto!, adminId: String!): Organization!
   updateOrganization(updateOrganizationDto: UpdateOrganizationDto!): Organization!
   softDeleteOrganization(id: String!, adminId: String!): Boolean!
+  switchUserOrganization(switchUserOrganizationDto: SwitchUserOrganizationDto!): String!
   createAdmin(createAdmin: CreateAdminDto!): Admin!
   updateAdmin(id: String!, updateAdmin: UpdateAdminDto!): Admin!
   removeAdmin(id: Int!): Boolean!
@@ -156,6 +164,11 @@ input CreateOrganizationDto {
 input UpdateOrganizationDto {
   name: String
   id: String!
+}
+
+input SwitchUserOrganizationDto {
+  userId: String!
+  organizationId: String!
 }
 
 input CreateAdminDto {
