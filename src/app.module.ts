@@ -1,22 +1,23 @@
-import { Module } from '@nestjs/common'
-import { AppController } from './app.controller'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { AppService } from './app.service'
-import { GraphQLModule } from '@nestjs/graphql'
-import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo'
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppService } from './app.service';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { join } from 'path';
-import { ProjectModule } from './project/projects.module'
-import { UserModule } from './users/user.module'
-import { ClientModule } from './client/clinet.module'
-import { AuthModule } from './users/auth/auth.module'
-import { InvitationModule } from './invitation/invitation.module'
-import { OrganizationModule } from './organization/organization.module'
-import { MailerModule } from './mailer/mail.module'
-import { JwtModule } from '@nestjs/jwt'
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import { AdminModule } from './admin/admin.module'
-require('dotenv').config();
+import { ProjectModule } from './project/projects.module';
+import { UserModule } from './users/user.module';
+import { ClientModule } from './client/clinet.module';
+import { AuthModule } from './users/auth/auth.module';
+import { InvitationModule } from './invitation/invitation.module';
+import { OrganizationModule } from './organization/organization.module';
+import { MailerModule } from './mailer/mail.module';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AdminModule } from './admin/admin.module';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 
+require('dotenv').config();
 
 @Module({
   imports: [
@@ -38,14 +39,15 @@ require('dotenv').config();
       database: process.env.DB_NAME,
       entities: ['dist/**/*.entity.{ts,js}'],
       synchronize: true,
-      
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
+      playground: false,
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
