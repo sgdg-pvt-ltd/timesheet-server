@@ -30,7 +30,6 @@ enum UserRole {
 type Organization {
   id: ID!
   name: String!
-  users: [User]
   deletedAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -49,7 +48,6 @@ type User {
   resetToken: String!
   organizationId: String!
   role: UserRole!
-  organization: Organization!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
