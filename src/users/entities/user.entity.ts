@@ -30,7 +30,6 @@ export class User {
   @Column()
   @Field()
   organizationId: string; 
-
  
   @Column({ type: 'enum', enum: UserRole})
   @Field(() => UserRole) 
@@ -47,5 +46,4 @@ export class User {
   @UpdateDateColumn()
   @Field()
   updatedAt: Date;
-
 }
