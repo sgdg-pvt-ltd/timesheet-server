@@ -4,9 +4,6 @@ import { IsEmail, IsNotEmpty, Matches } from 'class-validator';
 @InputType()
 export class SignupInput {
 
-  @Field({ nullable: true })
-  username?: string;
-
   @Field()
   @IsNotEmpty()
   @IsEmail()

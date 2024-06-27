@@ -11,8 +11,8 @@ export class OrganizationResolver {
   constructor(private readonly organizationService: OrganizationService) {}
 
   @Mutation(returns => Organization)
-  createOrganization(@Args('createOrganizationDto') createOrganizationDto: CreateOrganizationDto,  @Args('adminId') adminId: string,): Promise<Organization> {
-    return this.organizationService.create(createOrganizationDto, adminId);
+  createOrganization(@Args('createOrganizationDto') createOrganizationDto: CreateOrganizationDto,  @Args('userId') userId: string,): Promise<Organization> {
+    return this.organizationService.create(createOrganizationDto, userId);
   }
 
   @Query(returns => [Organization])

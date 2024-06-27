@@ -12,9 +12,7 @@ import { AuthModule } from './users/auth/auth.module'
 import { InvitationModule } from './invitation/invitation.module'
 import { OrganizationModule } from './organization/organization.module'
 import { MailerModule } from './mailer/mail.module'
-import { JwtModule } from '@nestjs/jwt'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { AdminModule } from './admin/admin.module'
 require('dotenv').config();
 
 
@@ -27,7 +25,6 @@ require('dotenv').config();
     MailerModule,
     InvitationModule,
     OrganizationModule,
-    AdminModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',

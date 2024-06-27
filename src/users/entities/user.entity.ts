@@ -27,11 +27,11 @@ export class User {
   resetToken: string;
   filter: any
 
-  @Column()
+  @Column({ nullable: true })
   @Field()
   organizationId: string; 
  
-  @Column({ type: 'enum', enum: UserRole})
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.superAdmin })
   @Field(() => UserRole) 
   role: UserRole;
 

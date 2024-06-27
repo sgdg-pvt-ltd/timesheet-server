@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { Organization } from './entities/organization.entity';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
-import { Admin } from 'src/admin/entities/admin.entity';
 import { UserRole } from 'src/common/role';
 import ErrorMessage from 'src/common/error-message';
 import { User } from 'src/users/entities/user.entity';
@@ -16,26 +15,28 @@ export class OrganizationService {
   constructor(
     @InjectRepository(Organization)
     private readonly organizationRepository: Repository<Organization>,
-    @InjectRepository(Admin)
-    private readonly adminRepository: Repository<Admin>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
   ) {}
 
-  async create(createOrganizationDto: CreateOrganizationDto, adminId: string): Promise<Organization> {
+  async create(createOrganizationDto: CreateOrganizationDto, userId: string): Promise<Organization> {
     const {name} = createOrganizationDto
     const lowerCaseName = name.toLowerCase();
     const exsitsName =  await this.organizationRepository.findOne({where: {name: name.toLowerCase()}})
     if(exsitsName){
       throw new HttpException(ErrorMessage.ORGANIZATION_NAME_EXISTS, HttpStatus.BAD_REQUEST);
     }
-    const admin = await this.adminRepository.findOne({where: {id: adminId}})
+    const admin = await this.userRepository.findOne({where: {id: userId}})
     if(!admin || admin.role !== UserRole.superAdmin){
       throw new HttpException(ErrorMessage.SUPERADMIN_PERMISSION, HttpStatus.BAD_REQUEST);
     }
-    const organization = this.organizationRepository.create({...createOrganizationDto, name:lowerCaseName});
-    return this.organizationRepository.save(organization);
+    const organization = this.organizationRepository.create({ ...createOrganizationDto, name: lowerCaseName });
+    const savedOrganization = await this.organizationRepository.save(organization);
+    admin.organizationId = savedOrganization.id;
+    await this.userRepository.save(admin);
+  
+    return savedOrganization;
   }
 
   findAll(): Promise<Organization[]> {
@@ -61,7 +62,7 @@ export class OrganizationService {
   }
 
   async softDelete(id: string, adminId: string): Promise<void> {
-    const admin = await this.adminRepository.findOne({ where: { id: adminId } });
+    const admin = await this.userRepository.findOne({ where: { id: adminId } });
     if (!admin || admin.role !== UserRole.superAdmin) {
       throw new HttpException(ErrorMessage.SUPERADMIN_DELETE, HttpStatus.BAD_REQUEST);
     }

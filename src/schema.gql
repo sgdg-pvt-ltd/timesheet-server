@@ -61,6 +61,12 @@ type Client {
   projectList: [Projects!]
 }
 
+type SignupResponse {
+  id: String!
+  email: String!
+  role: UserRole!
+}
+
 type SignInResponseDto {
   email: String!
   id: String!
@@ -80,15 +86,6 @@ type InvitationResponse {
   token: String!
 }
 
-type Admin {
-  id: String!
-  username: String!
-  password: String!
-  role: UserRole!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
 type Query {
   projects: [ProjectOutput!]!
   project(id: String!): ProjectOutput!
@@ -97,8 +94,6 @@ type Query {
   client(clientId: String!): Client!
   organizations: [Organization!]!
   organization(id: String!): Organization!
-  findAllAdmins: [Admin!]!
-  findOneAdmin(id: String!): Admin!
 }
 
 type Mutation {
@@ -108,16 +103,13 @@ type Mutation {
   updateClient(clientId: String!, clientInput: ClientInput!): Client!
   removeClient(clientId: String!): Boolean!
   signIn(signInInput: SigninInput!): SignInResponseDto!
-  signUp(signUpInput: SignupInput!): User!
+  signUp(signUpInput: SignupInput!): SignupResponse!
   inviteUser(createInvitationInput: CreateInvitationDto!): InvitationResponse!
   acceptInvitation(acceptInvitationInput: AcceptInvitationDto!): User!
-  createOrganization(createOrganizationDto: CreateOrganizationDto!, adminId: String!): Organization!
+  createOrganization(createOrganizationDto: CreateOrganizationDto!, userId: String!): Organization!
   updateOrganization(updateOrganizationDto: UpdateOrganizationDto!): Organization!
   softDeleteOrganization(id: String!, adminId: String!): Boolean!
   switchUserOrganization(switchUserOrganizationDto: SwitchUserOrganizationDto!): String!
-  createAdmin(createAdmin: CreateAdminDto!): Admin!
-  updateAdmin(id: String!, updateAdmin: UpdateAdminDto!): Admin!
-  removeAdmin(id: Int!): Boolean!
 }
 
 input ProjectInput {
@@ -140,7 +132,6 @@ input SigninInput {
 }
 
 input SignupInput {
-  username: String
   email: String!
   password: String!
   confirmPassword: String!
@@ -169,14 +160,4 @@ input UpdateOrganizationDto {
 input SwitchUserOrganizationDto {
   userId: String!
   organizationId: String!
-}
-
-input CreateAdminDto {
-  username: String!
-  password: String!
-}
-
-input UpdateAdminDto {
-  username: String
-  password: String
 }

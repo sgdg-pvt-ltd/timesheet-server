@@ -4,6 +4,7 @@ import { SignupInput } from '../dto/sighnup-dto';
 import { SigninInput } from '../dto/signin-dto';
 import { User } from '../entities/user.entity';
 import { SignInResponseDto } from '../dto/signin-response.dto';
+import { SignupResponse } from '../dto/signup-response.dto';
 
 @Resolver()
 export class AuthResolver {
@@ -18,7 +19,7 @@ export class AuthResolver {
       throw new Error(`Failed to sign in: ${error.message}`);
     }
   }
-  @Mutation(() => User)
+  @Mutation(() => SignupResponse)
   async signUp(
     @Args('signUpInput') signUpInput: SignupInput) {
     return this.authService.signUp(signUpInput);

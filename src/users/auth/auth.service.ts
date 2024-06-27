@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import ErrorMessage from 'src/common/error-message';
 import { validateEmail, validatePassword } from 'src/validations/singup-validation.helper';
 import { SignInResponseDto } from '../dto/signin-response.dto';
+import { SignupResponse } from '../dto/signup-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -57,10 +58,10 @@ export class AuthService {
     }
   }
 
-  async signUp(signUpInput: SignupInput): Promise<User> {
+  async signUp(signUpInput: SignupInput): Promise<SignupResponse> {
     try {
-      const { username, email, password, confirmPassword } = signUpInput;
-      if (!(username && email && password)) {
+      const { email, password, confirmPassword } = signUpInput;
+      if (!( email && password)) {
         throw new HttpException(ErrorMessage.FILL_ALL_DATA, HttpStatus.BAD_REQUEST);
       }
       if (password !== confirmPassword) {
@@ -69,20 +70,24 @@ export class AuthService {
       if (!validateEmail(email)) {
         throw new HttpException(ErrorMessage.INVALID_EMAIL, HttpStatus.BAD_REQUEST);
       }
-      const existingEmail = await this.userRepository.findOne({ where: { email:email.toLowerCase()  } });
+      const existingEmail = await this.userRepository.findOne({ where: { email: email.toLowerCase() } });
       if (existingEmail) {
         throw new HttpException(ErrorMessage.EMAIL_EXISTS, HttpStatus.BAD_REQUEST);
       }
       if (!validatePassword(password)) {
         throw new HttpException(ErrorMessage.INVALID_PASSWORD, HttpStatus.BAD_REQUEST);
       }
-      const encryptPassword = await this.bcryptService.hashingPassword(password);   
+      const encryptPassword = await this.bcryptService.hashingPassword(password);
       const newUser = new User();
-      newUser.username = username;
       newUser.email = email.toLowerCase();
-      newUser.password = encryptPassword; 
+      newUser.password = encryptPassword;
       const savedUser = await this.userRepository.save(newUser);
-      return savedUser;
+  
+      const signupResponse = new SignupResponse();
+      signupResponse.id = savedUser.id;
+      signupResponse.email = savedUser.email;
+      signupResponse.role = savedUser.role;
+      return signupResponse;
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
@@ -93,5 +98,5 @@ export class AuthService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-  }
+}
 }
