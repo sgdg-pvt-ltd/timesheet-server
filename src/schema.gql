@@ -30,7 +30,7 @@ enum UserRole {
 type Organization {
   id: ID!
   name: String!
-  users: [User]
+  adminId: String!
   deletedAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -49,7 +49,6 @@ type User {
   resetToken: String!
   organizationId: String!
   role: UserRole!
-  organization: Organization!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -70,7 +69,7 @@ type SignupResponse {
 type SignInResponseDto {
   email: String!
   id: String!
-  organizationId: String!
+  organizationId: String
   token: String!
 }
 
@@ -86,6 +85,11 @@ type InvitationResponse {
   token: String!
 }
 
+type OrganizationUsersDto {
+  organizationName: String!
+  userEmails: [String!]!
+}
+
 type Query {
   projects: [ProjectOutput!]!
   project(id: String!): ProjectOutput!
@@ -94,6 +98,7 @@ type Query {
   client(clientId: String!): Client!
   organizations: [Organization!]!
   organization(id: String!): Organization!
+  getOrganizationsWithUsers: [OrganizationUsersDto!]!
 }
 
 type Mutation {
@@ -106,7 +111,7 @@ type Mutation {
   signUp(signUpInput: SignupInput!): SignupResponse!
   inviteUser(createInvitationInput: CreateInvitationDto!): InvitationResponse!
   acceptInvitation(acceptInvitationInput: AcceptInvitationDto!): User!
-  createOrganization(createOrganizationDto: CreateOrganizationDto!, userId: String!): Organization!
+  createOrganization(createOrganizationDto: CreateOrganizationDto!, adminId: String!): Organization!
   updateOrganization(updateOrganizationDto: UpdateOrganizationDto!): Organization!
   softDeleteOrganization(id: String!, adminId: String!): Boolean!
   switchUserOrganization(switchUserOrganizationDto: SwitchUserOrganizationDto!): String!

@@ -5,14 +5,15 @@ import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
 import { UserRole } from 'src/common/role';
 import { SwitchUserOrganizationDto } from './dto/switch-user-organization.dto';
+import { OrganizationUsersDto } from './dto/user-organization-list.dto';
 
 @Resolver(of => Organization)
 export class OrganizationResolver {
   constructor(private readonly organizationService: OrganizationService) {}
 
   @Mutation(returns => Organization)
-  createOrganization(@Args('createOrganizationDto') createOrganizationDto: CreateOrganizationDto,  @Args('userId') userId: string,): Promise<Organization> {
-    return this.organizationService.create(createOrganizationDto, userId);
+  createOrganization(@Args('createOrganizationDto') createOrganizationDto: CreateOrganizationDto,  @Args('adminId') adminId: string,): Promise<Organization> {
+    return this.organizationService.create(createOrganizationDto, adminId);
   }
 
   @Query(returns => [Organization])
@@ -28,6 +29,11 @@ export class OrganizationResolver {
   @Mutation(returns => Organization)
   updateOrganization(@Args('updateOrganizationDto') updateOrganizationDto: UpdateOrganizationDto): Promise<Organization> {
     return this.organizationService.update(updateOrganizationDto.id, updateOrganizationDto);
+  }
+
+  @Query(() => [OrganizationUsersDto])
+  async getOrganizationsWithUsers(): Promise<OrganizationUsersDto[]> {
+    return this.organizationService.getOrganizationsWithUsers();
   }
 
   @Mutation(() => Boolean)

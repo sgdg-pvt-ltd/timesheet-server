@@ -1,6 +1,7 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, DeleteDateColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
+import { UserOrganization } from './userOrganization.entity';
 
 @ObjectType()
 @Entity()
@@ -13,9 +14,12 @@ export class Organization {
   @Column()
   name: string;
 
-  @Field(() => [User], { nullable: 'itemsAndList' })
-  @OneToMany(() => User, user => user.organization, { nullable: true })
-  users: User[];
+  @Field()
+  @Column()
+  adminId: string;
+
+  @OneToMany(() => UserOrganization, userOrganization => userOrganization.organization)
+  userOrganizations: UserOrganization[];
 
   @Field({ nullable: true })
   @DeleteDateColumn()

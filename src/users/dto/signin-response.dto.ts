@@ -8,7 +8,7 @@ export class SignInResponseDto {
   @Field()
   id: string;
 
-  @Field()
+  @Field({nullable: true})
   organizationId: string;
 
   @Field()

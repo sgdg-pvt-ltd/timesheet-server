@@ -6,9 +6,10 @@ import { OrganizationResolver } from './organization.resolver';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { User } from 'src/users/entities/user.entity';
+import { UserOrganization } from './entities/userOrganization.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Organization, User]),   JwtModule.register({
+  imports: [TypeOrmModule.forFeature([Organization, User, UserOrganization]),   JwtModule.register({
     secret: 'your-secret-key', 
     signOptions: { expiresIn: '1h' },
   }), ConfigModule],

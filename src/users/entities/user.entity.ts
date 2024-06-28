@@ -1,7 +1,8 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Organization } from '../../organization/entities/organization.entity';
 import { UserRole } from 'src/common/role';
+import { UserOrganization } from 'src/organization/entities/userOrganization.entity';
 
 @ObjectType()
 @Entity()
@@ -35,9 +36,8 @@ export class User {
   @Field(() => UserRole) 
   role: UserRole;
 
-  @Field(() => Organization)
-  @ManyToOne(() => Organization, organization => organization.users)
-  organization?: Organization; 
+  @OneToMany(() => UserOrganization, userOrganization => userOrganization.user)
+  userOrganizations: UserOrganization[];
 
   @CreateDateColumn()
   @Field()
