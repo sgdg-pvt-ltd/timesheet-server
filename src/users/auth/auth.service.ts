@@ -11,6 +11,7 @@ import ErrorMessage from 'src/common/error-message';
 import { validateEmail, validatePassword } from 'src/validations/singup-validation.helper';
 import { SignInResponseDto } from '../dto/signin-response.dto';
 import { SignupResponse } from '../dto/signup-response.dto';
+import { UserOrganization } from 'src/organization/entities/userOrganization.entity';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,8 @@ export class AuthService {
     private bcryptService: BcryptService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(UserOrganization)
+    private readonly userOrganizationRepository: Repository<UserOrganization>,
   ) {}
 
   async validateUser(loginUserDto: SigninInput) {
@@ -38,25 +41,34 @@ export class AuthService {
   async login(loginUserDto: SigninInput): Promise<SignInResponseDto> {
     try {
       const user = await this.validateUser(loginUserDto);
+      const userOrganizations = await this.userOrganizationRepository.find({
+        where: { user: { id: user.id } },
+      });
+  
+      const organizationIds = userOrganizations.map(userOrg => userOrg.organizationId);
+  
       const payload = {
         email: user.email,
         id: user.id,
-        organizationId: user.organizationId,
-
+        organizationIds: organizationIds,
       };
       const accessToken = this.jwtService.sign(payload);
+  
       const response: SignInResponseDto = {
         token: accessToken,
         email: user.email,
         id: user.id,
-        organizationId: user.organizationId,
+        organizationIds: organizationIds,
       };
-
+  
       return response;
     } catch (error) {
       throw new Error(`Authentication failed: ${error.message}`);
     }
   }
+  
+
+
 
   async signUp(signUpInput: SignupInput): Promise<SignupResponse> {
     try {

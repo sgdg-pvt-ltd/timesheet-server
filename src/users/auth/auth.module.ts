@@ -11,6 +11,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthResolver } from './auth.resolver';
+import { UserOrganization } from 'src/organization/entities/userOrganization.entity';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { AuthResolver } from './auth.resolver';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '2h' },
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, UserOrganization]),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy, BcryptService, UserService ,AuthResolver],
   exports: [AuthService],

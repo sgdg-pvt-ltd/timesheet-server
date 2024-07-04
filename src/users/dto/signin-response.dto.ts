@@ -8,8 +8,8 @@ export class SignInResponseDto {
   @Field()
   id: string;
 
-  @Field({nullable: true})
-  organizationId: string;
+  @Field(() => [String])
+  organizationIds: string[];
 
   @Field()
   token: string;

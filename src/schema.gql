@@ -83,7 +83,7 @@ type SignupResponse {
 type SignInResponseDto {
   email: String!
   id: String!
-  organizationId: String
+  organizationIds: [String!]!
   token: String!
 }
 
