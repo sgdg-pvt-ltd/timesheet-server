@@ -54,10 +54,24 @@ type User {
 }
 
 type Client {
-  clientId: ID!
-  clientName: String!
-  clientContact: String!
+  id: ID!
   projectList: [Projects!]
+  organizationId: String
+  title: String
+  firstName: String
+  lastName: String
+  customerDisplayName: String
+  companyName: String
+  emailAddress: String
+  phoneNumber: String
+  mobileNumber: String
+  other: String
+  fax: String
+  website: String
+  createdBy: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
 }
 
 type SignupResponse {
@@ -85,9 +99,18 @@ type InvitationResponse {
   token: String!
 }
 
+type UserDetailsDto {
+  email: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type OrganizationUsersDto {
+  organizationId: String!
   organizationName: String!
-  userEmails: [String!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  userDetails: [UserDetailsDto!]!
 }
 
 type Query {
@@ -98,15 +121,16 @@ type Query {
   client(clientId: String!): Client!
   organizations: [Organization!]!
   organization(id: String!): Organization!
+  getSingleOrganizationWithUser(organizationId: String!): OrganizationUsersDto!
   getOrganizationsWithUsers: [OrganizationUsersDto!]!
 }
 
 type Mutation {
   createProject(data: ProjectInput!): ProjectOutput!
   updateProject(data: ProjectInput!, id: String!): ProjectOutput!
-  createClient(clientInput: ClientInput!): Client!
-  updateClient(clientId: String!, clientInput: ClientInput!): Client!
-  removeClient(clientId: String!): Boolean!
+  createClient(adminId: String!, clientInput: ClientInput!): Client!
+  updateClient(adminId: String!, clientId: String!, clientInput: ClientInput!): Client!
+  removeClient(adminId: String!, clientId: String!): Boolean!
   signIn(signInInput: SigninInput!): SignInResponseDto!
   signUp(signUpInput: SignupInput!): SignupResponse!
   inviteUser(createInvitationInput: CreateInvitationDto!): InvitationResponse!
@@ -126,9 +150,17 @@ input ProjectInput {
 }
 
 input ClientInput {
-  clientName: String
-  clientContact: String
-  projectList: [ProjectInput!]
+  title: String
+  firstName: String
+  lastName: String
+  customerDisplayName: String
+  companyName: String
+  emailAddress: String
+  phoneNumber: String
+  mobileNumber: String
+  other: String
+  fax: String
+  website: String
 }
 
 input SigninInput {

@@ -8,8 +8,10 @@ const PASSWORD_MISMATCH = "Password does not match";
 const ORGANIZATION_NAME_EXISTS = "Organization already exists"
 const ORGANIZATION_NOT_FOUND = 'Organization not found';
 const SUPERADMIN_PERMISSION = 'Only super admins can create organizations'
+const SUPERADMIN_MASTERADMIN_PERMISSION= "Only super admin or master admin can add client"
 const SUPERADMIN_DELETE = 'Only super admins can delete organizations'
-const INVITATION_ID_NOT_FOUND= 'Invitation Id not found'
+const INVITATION_ID_NOT_FOUND = 'Invitation Id not found'
+const USER_NOT_FOUND = 'User not found'
 
 //token
 const INVALID_TOKEN = "Invalid Token";
@@ -29,6 +31,8 @@ const ErrorMessage = {
     SUPERADMIN_PERMISSION,
     SUPERADMIN_DELETE,
     INVITATION_ID_NOT_FOUND,
+    USER_NOT_FOUND,
+    SUPERADMIN_MASTERADMIN_PERMISSION
 }
 
 export default ErrorMessage

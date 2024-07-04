@@ -5,7 +5,12 @@ import { ClientService } from './client.service';
 
 @Resolver(() => Client)
 export class ClientResolver {
-  constructor(private readonly clientService: ClientService) {}
+  constructor(private readonly clientService: ClientService) { }
+
+  @Mutation(() => Client)
+  async createClient(@Args('adminId') userId: string, @Args('clientInput') clientInput: ClientInput): Promise<Client> {
+    return this.clientService.create(userId, clientInput);
+  }
 
   @Query(() => [Client])
   async clients(): Promise<Client[]> {
@@ -16,20 +21,15 @@ export class ClientResolver {
   async client(@Args('clientId') clientId: string): Promise<Client> {
     return this.clientService.findOne(clientId);
   }
-  
-  @Mutation(() => Client)
-  async createClient(@Args('clientInput') clientInput: ClientInput): Promise<Client> {
-    return this.clientService.create(clientInput);
-  }
 
   @Mutation(() => Client)
-  async updateClient(@Args('clientId') clientId: string, @Args('clientInput') clientInput: ClientInput): Promise<Client> {
-    return this.clientService.update(clientId, clientInput);
+  async updateClient(@Args('adminId') userId: string, @Args('clientId') clientId: string, @Args('clientInput') clientInput: ClientInput): Promise<Client> {
+    return this.clientService.update(userId, clientId, clientInput);
   }
 
   @Mutation(() => Boolean)
-  async removeClient(@Args('clientId') clientId: string): Promise<boolean> {
-    await this.clientService.remove(clientId);
+  async removeClient(@Args('adminId') userId: string,@Args('clientId') clientId: string): Promise<boolean> {
+    await this.clientService.remove(userId, clientId);
     return true;
   }
 }

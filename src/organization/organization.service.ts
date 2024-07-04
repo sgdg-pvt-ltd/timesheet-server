@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { SwitchUserOrganizationDto } from './dto/switch-user-organization.dto';
 import { UserOrganization } from './entities/userOrganization.entity';
 import { OrganizationUsersDto } from './dto/user-organization-list.dto';
+import { UserDetailsDto } from './dto/user-details.dto';
 
 @Injectable()
 export class OrganizationService {
@@ -52,26 +53,64 @@ export class OrganizationService {
     });
   }
 
+  async getSingleOrganizationWithUser(organizationId: string): Promise<OrganizationUsersDto> {
+    const organization = await this.organizationRepository.findOne({
+      where: { id: organizationId },
+    });
+
+    if (!organization) {
+      throw new HttpException(`Organization with ID ${organizationId} not found`, HttpStatus.NOT_FOUND);
+    }
+    const userOrganizations = await this.userOrganizationRepository.find({
+      where: { organization: { id: organization.id } },
+      relations: ['user'],
+    });
+
+   
+    const userDetails: UserDetailsDto[] = userOrganizations.map((userOrg) => ({
+      email: userOrg.user.email,
+      createdAt: userOrg.user.createdAt,
+      updatedAt: userOrg.user.updatedAt,
+    }));
+
+    return {
+      organizationId: organization.id,
+      organizationName: organization.name,
+      createdAt: organization.createdAt,
+      updatedAt: organization.updatedAt,
+      userDetails: userDetails,
+    };
+  }
+
+
   async getOrganizationsWithUsers(): Promise<OrganizationUsersDto[]> {
     const organizations = await this.organizationRepository.find();
     const result: OrganizationUsersDto[] = [];
-
+  
     for (const organization of organizations) {
       const userOrganizations = await this.userOrganizationRepository.find({
         where: { organization: { id: organization.id } },
         relations: ['user'],
       });
-
-      
-      const userEmails = userOrganizations.map(userOrg => userOrg.user.email);
+  
+      const userDetails: UserDetailsDto[] = userOrganizations.map((userOrg) => ({
+        email: userOrg.user.email,
+        createdAt: userOrg.user.createdAt,
+        updatedAt: userOrg.user.updatedAt,
+      }));
+  
       result.push({
+        organizationId: organization.id,
         organizationName: organization.name,
-        userEmails: userEmails,
+        createdAt: organization.createdAt,
+        updatedAt: organization.updatedAt,
+        userDetails: userDetails,
       });
     }
-
+  
     return result;
   }
+  
 
 
   async update(id: string, updateOrganizationDto: UpdateOrganizationDto): Promise<Organization> {

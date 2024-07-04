@@ -31,6 +31,13 @@ export class OrganizationResolver {
     return this.organizationService.update(updateOrganizationDto.id, updateOrganizationDto);
   }
 
+  @Query(() => OrganizationUsersDto)
+  async getSingleOrganizationWithUser(
+    @Args('organizationId') organizationId: string,
+  ): Promise<OrganizationUsersDto> {
+    return this.organizationService.getSingleOrganizationWithUser(organizationId);
+  }
+
   @Query(() => [OrganizationUsersDto])
   async getOrganizationsWithUsers(): Promise<OrganizationUsersDto[]> {
     return this.organizationService.getOrganizationsWithUsers();
