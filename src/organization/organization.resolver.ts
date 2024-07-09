@@ -6,6 +6,8 @@ import { UpdateOrganizationDto } from './dto/update-organization.dto';
 import { UserRole } from 'src/common/role';
 import { SwitchUserOrganizationDto } from './dto/switch-user-organization.dto';
 import { OrganizationUsersDto } from './dto/user-organization-list.dto';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/users/auth/jwt-auth.guard';
 
 @Resolver(of => Organization)
 export class OrganizationResolver {
@@ -38,6 +40,7 @@ export class OrganizationResolver {
     return this.organizationService.getSingleOrganizationWithUser(organizationId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query(() => [OrganizationUsersDto])
   async getOrganizationsWithUsers(): Promise<OrganizationUsersDto[]> {
     return this.organizationService.getOrganizationsWithUsers();

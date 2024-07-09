@@ -69,6 +69,7 @@ export class OrganizationService {
    
     const userDetails: UserDetailsDto[] = userOrganizations.map((userOrg) => ({
       email: userOrg.user.email,
+      role: userOrg.user.role,
       createdAt: userOrg.user.createdAt,
       updatedAt: userOrg.user.updatedAt,
     }));
@@ -95,6 +96,7 @@ export class OrganizationService {
   
       const userDetails: UserDetailsDto[] = userOrganizations.map((userOrg) => ({
         email: userOrg.user.email,
+        role: userOrg.user.role,
         createdAt: userOrg.user.createdAt,
         updatedAt: userOrg.user.updatedAt,
       }));

@@ -12,6 +12,7 @@ import { validateEmail, validatePassword } from 'src/validations/singup-validati
 import { SignInResponseDto } from '../dto/signin-response.dto';
 import { SignupResponse } from '../dto/signup-response.dto';
 import { UserOrganization } from 'src/organization/entities/userOrganization.entity';
+import { JwtPayload } from './jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -24,6 +25,10 @@ export class AuthService {
     @InjectRepository(UserOrganization)
     private readonly userOrganizationRepository: Repository<UserOrganization>,
   ) {}
+
+  async validateUserById(payload: JwtPayload): Promise<any> {
+    return await this.userService.findOneById(payload.id);
+  }
 
   async validateUser(loginUserDto: SigninInput) {
     const user = await this.userService.findOne(loginUserDto.email.toLowerCase())

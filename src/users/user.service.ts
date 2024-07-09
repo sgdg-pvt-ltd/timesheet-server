@@ -11,7 +11,7 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async getById(id: string) {
+  async findOneById(id: string) {
     try {
       const user = await this.userRepository.findOne({where:{id}});
       if (!user) {

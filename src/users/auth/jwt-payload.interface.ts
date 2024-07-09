@@ -1,5 +1,5 @@
 export interface JwtPayload {
-    email: string;
-    sub: string;
-  }
-  
+  id: string;
+  email: string;
+  organizationIds: string[];
+}

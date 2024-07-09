@@ -101,6 +101,7 @@ type InvitationResponse {
 
 type UserDetailsDto {
   email: String!
+  role: UserRole!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
