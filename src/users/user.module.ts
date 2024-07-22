@@ -5,7 +5,7 @@ import { User } from './entities/user.entity';
 import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
 import { JwtModule } from '@nestjs/jwt';
-import { UserLoader } from './user.loader';
+// import { UserLoader } from './user.loader';
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import { UserLoader } from './user.loader';
     BcryptModule,
     JwtModule
   ],
-  providers: [UserService, UserResolver, UserLoader],
+  providers: [UserService, UserResolver, ],
   exports: [UserService, UserResolver],
 })
 export class UserModule {}

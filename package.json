@@ -46,6 +46,7 @@
     "passport-strategy": "^1.0.0",
     "pg": "^8.11.5",
     "reflect-metadata": "^0.1.13",
+    "resend": "^3.4.0",
     "rxjs": "^7.8.1",
     "type-graphql": "^1.1.1",
     "typeorm": "^0.3.20"

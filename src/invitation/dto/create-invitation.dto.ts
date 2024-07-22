@@ -1,8 +1,12 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { UserRole } from 'src/common/role';
+import { CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
 
 @InputType()
 export class CreateInvitationDto {
+  @Field()
+  sendBy: string;
+
   @Field()
   email: string;
 
@@ -11,4 +15,5 @@ export class CreateInvitationDto {
 
   @Field(() => UserRole)
   role: UserRole;
+ 
 }

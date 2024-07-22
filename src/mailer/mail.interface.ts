@@ -1,7 +1,6 @@
 export interface SendEmailDto {
-    from?: string;
-    recipients: string;
-    subject: string;
-    html: string;
-  }
-  
+  from?: { name: string; address: string } | string;
+  recipients: string | string[];
+  subject: string;
+  html: string;
+}

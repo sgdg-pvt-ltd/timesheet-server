@@ -30,50 +30,67 @@ export class InvitationService {
     private readonly bcryptService: BcryptService
   ) {}
 
-  async sendInvitation(email: string, organizationId: string, role:UserRole): Promise<InvitationResponse> {
+  async sendInvitation(
+    sendBy: string,
+    email: string,
+    organizationId: string,
+    role: UserRole
+  ): Promise<InvitationResponse> {
+    const admin = await this.userRepository.findOne({
+      where: { id: sendBy },
+    });
+    if (!admin || admin.role !== UserRole.superAdmin) {
+      throw new HttpException(
+        'Only Super Admin can send invitations',
+        HttpStatus.FORBIDDEN
+      );
+    }
     const organization = await this.organizationRepository.findOne({
       where: { id: organizationId },
     });
     if (!organization) {
-      throw new HttpException(ErrorMessage.ORGANIZATION_NOT_FOUND, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        ErrorMessage.ORGANIZATION_NOT_FOUND,
+        HttpStatus.BAD_REQUEST
+      );
     }
-    const invitation = this.invitationRepository.create({ email, organizationId, role });
+    const invitation = this.invitationRepository.create({ sendBy, email, organizationId, role });
     await this.invitationRepository.save(invitation);
-    
     const secretKey = this.configService.get<string>('JWT_SECRET_KEY');
-    const token = jwt.sign({ invitationId: invitation.id, email, organizationId, role }, secretKey, {
-      expiresIn: '1h',
-    });
-    await this.sendInvitationEmail(email, invitation.id);
-    return {invitation, token};
+    const token = jwt.sign(
+      { invitationId: invitation.id, email, organizationId, role },
+      secretKey,
+      {
+        expiresIn: '1h',
+      }
+    );
+    await this.sendInvitationEmail(email, invitation.id, token);
+    return { invitation };
   }
-
-  private async sendInvitationEmail(email: string, invitationId: string): Promise<void> {
-    const invitationLink = `${this.configService.get<string>('APP_URL')}/signup?invitation=${invitationId}`;
+  
+  private async sendInvitationEmail(email: string, invitationId: string, token: string): Promise<void> {
+    const invitationLink = `${this.configService.get<string>('APP_URL')}/signup?invitation=${invitationId}&token=${token}`;
     const mailOptions = {
+      from: this.configService.get<string>('DEFAULT_MAIL_FROM'),
       recipients: email,
       subject: 'Invitation to Join Organization',
       html: `<p>You have been invited to join the organization. Please sign up using the following link: <a href="${invitationLink}">Sign Up</a></p>`,
     };
-
+    console.log(invitationLink, 'link');
     await this.mailerService.sendEmail(mailOptions);
     console.log(`Invitation sent to ${email}`);
   }
 
   // async acceptInvitation(token: string, acceptInvitationDto: AcceptInvitationDto): Promise<User> {
   //   const { password, confirmPassword } = acceptInvitationDto;
-    
   //   const secretKey = this.configService.get<string>('JWT_SECRET_KEY');
   //   let payload: any;
-
   //   try {
   //     payload = jwt.verify(token, secretKey);
   //   } catch (e) {
   //     throw new HttpException(ErrorMessage.INVALID_TOKEN, HttpStatus.BAD_REQUEST);
   //   }
-
   //   const { invitationId, email } = payload;
-
   //   const emailExists = await this. userRepository.findOne({ where: { email: email}})
   //   if (emailExists) {
   //     emailExists.organizationId = payload.organizationId; 
@@ -81,7 +98,6 @@ export class InvitationService {
   //     await this.userRepository.save(emailExists);
   //     return emailExists;
   //   }
-
   //   const invitation = await this.invitationRepository.findOne({ where: { id: invitationId, email } });
   //   if (!invitation) {
   //     throw new HttpException(ErrorMessage.INVITATION_ID_NOT_FOUND, HttpStatus.BAD_REQUEST);
@@ -90,19 +106,15 @@ export class InvitationService {
   //   if (password !== confirmPassword) {
   //     throw new HttpException(ErrorMessage.PASSWORD_MISMATCH, HttpStatus.BAD_REQUEST);
   //   }
-
   //   const hashedPassword = await this.bcryptService.hashingPassword(password);
-
   //   const user = this.userRepository.create({
   //     email,
   //     password: hashedPassword,
   //     organizationId: invitation.organizationId,
   //     role: invitation.role,
   //   });
-
   //   await this.userRepository.save(user);
   //   await this.invitationRepository.remove(invitation);
-
   //   return user;
   // }
   async acceptInvitation(token: string, acceptInvitationDto: AcceptInvitationDto): Promise<User> {

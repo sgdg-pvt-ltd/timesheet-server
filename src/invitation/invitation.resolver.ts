@@ -13,8 +13,8 @@ export class InvitationResolver {
   async inviteUser(
     @Args('createInvitationInput') createInvitationDto: CreateInvitationDto
   ): Promise<InvitationResponse> {
-    const { email, organizationId, role } = createInvitationDto;
-    return this.invitationService.sendInvitation(email, organizationId, role);
+    const {sendBy, email, organizationId, role } = createInvitationDto;
+    return this.invitationService.sendInvitation(sendBy, email, organizationId, role);
   }
 
   @Mutation(() => User)

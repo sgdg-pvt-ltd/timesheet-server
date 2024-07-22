@@ -43,35 +43,54 @@ scalar DateTime
 
 type User {
   id: String!
-  username: String!
+  username: String
   email: String!
-  password: String!
-  resetToken: String!
   organizationId: String!
   role: UserRole!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
+type PageInfo {
+  count: Int!
+  total: Int!
+  limit: Int!
+  currentPage: Int!
+  totalPages: Int!
+}
+
+type PaginatedUsers {
+  users: [User!]!
+  pageInfo: PageInfo!
+}
+
 type Client {
   id: ID!
   projectList: [Projects!]
-  organizationId: String
+  organizationId: String!
   title: String
-  firstName: String
-  lastName: String
-  customerDisplayName: String
-  companyName: String
-  emailAddress: String
-  phoneNumber: String
-  mobileNumber: String
+  state: String
+  customerDisplayName: String!
+  companyName: String!
+  projectManagers: [String!]!
+  emailAddress: String!
+  mobileNumber: String!
   other: String
-  fax: String
   website: String
-  createdBy: String
+  createdBy: String!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
+}
+
+type ProjectManagerResponse {
+  id: String!
+  projectManagers: [String!]!
+}
+
+type PaginatedClients {
+  clients: [Client!]!
+  pageInfo: PageInfo!
 }
 
 type SignupResponse {
@@ -89,14 +108,17 @@ type SignInResponseDto {
 
 type Invitation {
   id: String!
+  sendBy: String!
   email: String!
   organizationId: String!
   role: UserRole!
+  deletedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type InvitationResponse {
   invitation: Invitation!
-  token: String!
 }
 
 type UserDetailsDto {
@@ -117,9 +139,10 @@ type OrganizationUsersDto {
 type Query {
   projects: [ProjectOutput!]!
   project(id: String!): ProjectOutput!
-  users(limit: Int!, offset: Int!): [User!]!
-  clients: [Client!]!
+  users(page: Int, limit: Int, query: String, order: String, sort: String): PaginatedUsers!
+  clients(page: Int, limit: Int, query: String, order: String, sort: String): PaginatedClients!
   client(clientId: String!): Client!
+  getProjectManger(clientId: String!): ProjectManagerResponse!
   organizations: [Organization!]!
   organization(id: String!): Organization!
   getSingleOrganizationWithUser(organizationId: String!): OrganizationUsersDto!
@@ -130,7 +153,9 @@ type Mutation {
   createProject(data: ProjectInput!): ProjectOutput!
   updateProject(data: ProjectInput!, id: String!): ProjectOutput!
   createClient(adminId: String!, clientInput: ClientInput!): Client!
-  updateClient(adminId: String!, clientId: String!, clientInput: ClientInput!): Client!
+  deleteProjectManager(clientId: String!, projectManager: String!): ProjectManagerResponse!
+  updateClient(adminId: String!, clientId: String!, clientInput: UpdateClientInput!): Client!
+  addProjectManager(adminId: String!, clientId: String!, projectManager: String!): Client!
   removeClient(adminId: String!, clientId: String!): Boolean!
   signIn(signInInput: SigninInput!): SignInResponseDto!
   signUp(signUpInput: SignupInput!): SignupResponse!
@@ -152,16 +177,26 @@ input ProjectInput {
 
 input ClientInput {
   title: String
-  firstName: String
-  lastName: String
+  state: String
+  customerDisplayName: String!
+  companyName: String!
+  emailAddress: String!
+  mobileNumber: String!
+  other: String
+  website: String
+  projectManagers: [String!]!
+}
+
+input UpdateClientInput {
+  title: String
+  state: String
   customerDisplayName: String
   companyName: String
   emailAddress: String
-  phoneNumber: String
   mobileNumber: String
   other: String
-  fax: String
   website: String
+  projectManagers: [String!]
 }
 
 input SigninInput {
@@ -176,6 +211,7 @@ input SignupInput {
 }
 
 input CreateInvitationDto {
+  sendBy: String!
   email: String!
   organizationId: String!
   role: UserRole!

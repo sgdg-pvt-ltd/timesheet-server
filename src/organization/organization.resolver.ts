@@ -13,16 +13,19 @@ import { JwtAuthGuard } from 'src/users/auth/jwt-auth.guard';
 export class OrganizationResolver {
   constructor(private readonly organizationService: OrganizationService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Mutation(returns => Organization)
   createOrganization(@Args('createOrganizationDto') createOrganizationDto: CreateOrganizationDto,  @Args('adminId') adminId: string,): Promise<Organization> {
     return this.organizationService.create(createOrganizationDto, adminId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query(returns => [Organization])
   organizations(): Promise<Organization[]> {
     return this.organizationService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query(returns => Organization)
   organization(@Args('id') id: string): Promise<Organization> {
     return this.organizationService.findOne(id);
@@ -33,6 +36,7 @@ export class OrganizationResolver {
     return this.organizationService.update(updateOrganizationDto.id, updateOrganizationDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Query(() => OrganizationUsersDto)
   async getSingleOrganizationWithUser(
     @Args('organizationId') organizationId: string,
@@ -46,6 +50,7 @@ export class OrganizationResolver {
     return this.organizationService.getOrganizationsWithUsers();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => Boolean)
   async softDeleteOrganization(
     @Args('id') id: string,
@@ -54,7 +59,8 @@ export class OrganizationResolver {
     await this.organizationService.softDelete(id, adminId);
     return true;
   }
-
+  
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => String)
   async switchUserOrganization(
     @Args('switchUserOrganizationDto') switchUserOrganizationDto: SwitchUserOrganizationDto,

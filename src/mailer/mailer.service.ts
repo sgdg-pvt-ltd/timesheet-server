@@ -1,39 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as nodemailer from 'nodemailer';
-import Mail from 'nodemailer/lib/mailer';
+import { Resend } from 'resend';
 import { SendEmailDto } from './mail.interface';
+import { CreateEmailResponseSuccess } from './resend-response.interface';
 
 @Injectable()
 export class MailerService {
-  constructor(private readonly configService: ConfigService) {}
+  private readonly resend: Resend;
 
-  mailTransport() {
-    return nodemailer.createTransport({
-      host: this.configService.get<string>('MAIL_HOST'),
-      port: this.configService.get<number>('MAIL_PORT'),
-      secure: false,
-      auth: {
-        user: this.configService.get<string>('MAIL_USER'),
-        pass: this.configService.get<string>('MAIL_PASS'),
-      },
-    });
+  constructor(private readonly configService: ConfigService) {
+    const resendApiKey = this.configService.get<string>('RESEND_API_KEY');
+    if (!resendApiKey) {
+      throw new Error('Resend API key is not configured');
+    }
+    this.resend = new Resend(resendApiKey);
   }
 
-  async sendEmail(dto: SendEmailDto) {
+  async sendEmail(dto: SendEmailDto): Promise<CreateEmailResponseSuccess> {
     const { from, recipients, subject, html } = dto;
-    const transport = this.mailTransport();
-    const options: Mail.Options = {
-      from: from ?? {
-        name: this.configService.get<string>('APP_NAME'),
-        address: this.configService.get<string>('DEFAULT_MAIL_FROM'),
-      },
-      to: recipients,
-      subject,
-      html,
-    };
+    const fromAddress = typeof from === 'string' ? from : `${from?.name} <${from?.address}>`;
+
+    if (!fromAddress.match(/^[^@]+@[^@]+\.[^@]+$|^[^@]+<[^@]+@[^@]+\.[^@]+>$/)) {
+      throw new Error('Invalid `from` field. The email address needs to follow the `email@example.com` or `Name <email@example.com>` format.');
+    }
+
     try {
-      return await transport.sendMail(options);
+      const response = await this.resend.emails.send({
+        from: fromAddress,
+        to: Array.isArray(recipients) ? recipients : [recipients],
+        subject,
+        html,
+      });
+
+      if (response.error) {
+        console.error('Error sending email', response.error);
+        throw new Error('Failed to send email');
+      }
+
+      return response.data as CreateEmailResponseSuccess;
     } catch (error) {
       console.error('Error sending email', error);
       throw error;

@@ -12,19 +12,17 @@ export class User {
   id: string;
 
   @Column({ nullable: true })
-  @Field()
-  username: string;
+  @Field({nullable: true})
+  username?: string;
 
   @Column()
   @Field()
   email: string;
 
   @Column()
-  @Field()
   password: string;
 
   @Column({ default: '' })
-  @Field()
   resetToken: string;
   filter: any
 

@@ -6,6 +6,5 @@ export class InvitationResponse {
   @Field(() => Invitation)
   invitation: Invitation;
 
-  @Field()
-  token: string;
+
 }

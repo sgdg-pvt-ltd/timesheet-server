@@ -18,60 +18,53 @@ export class Client {
   id: string;
 
   @OneToMany(() => Projects, (project) => project.masterProjectId)
-  @Field(() => [Projects], { nullable: true })
+  @Field(() => [Projects],  { nullable: true })
   projectList: Projects[];
 
-  @Column({ nullable: true })
-  @Field({ nullable: true })
+  @Column()
+  @Field()
   organizationId?: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  title?: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  firstName?: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  lastName?: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  customerDisplayName?: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  companyName?: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  emailAddress?: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  phoneNumber?: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  mobileNumber?: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  other?: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  fax?: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  website?: string;
 
   @Column({nullable: true})
   @Field({nullable: true})
-  createdBy?: string
+  title?: string;
+
+  @Column({nullable: true})
+  @Field({nullable: true})
+  state?: string;
+
+  @Column()
+  @Field()
+  customerDisplayName: string;
+
+  @Column()
+  @Field()
+  companyName: string;
+
+  @Column("simple-array")
+  @Field(() => [String], )
+  projectManagers: string[];
+
+  @Column()
+  @Field()
+  emailAddress: string;
+
+  @Column()
+  @Field()
+  mobileNumber: string;
+
+  @Column({nullable: true})
+  @Field({nullable: true})
+  other?: string;
+
+
+  @Column({nullable:true})
+  @Field({nullable: true})
+  website?: string;
+
+  @Column()
+  @Field()
+  createdBy: string
 
   @CreateDateColumn()
   @Field()
@@ -82,6 +75,6 @@ export class Client {
   updatedAt: Date;
 
   @DeleteDateColumn()
-  @Field({ nullable: true })
+  @Field({nullable: true})
   deletedAt?: Date;
 }
