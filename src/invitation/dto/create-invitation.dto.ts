@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { UserRole } from 'src/common/role';
+import { UserRole } from 'src/common/enum/role';
 import { CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
 
 @InputType()

@@ -1,4 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { ClientTitle } from 'src/common/enum/role';
 
 @InputType()
 export class ClientInput {
@@ -7,8 +8,8 @@ export class ClientInput {
 
     organizationId?: string;
 
-    @Field({ nullable: true })
-    title?: string;
+    @Field(() => ClientTitle, {nullable: true}) 
+    title?: ClientTitle;
 
     @Field({ nullable: true })
     state?: string;

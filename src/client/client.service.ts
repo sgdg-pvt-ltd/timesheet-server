@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Client } from './entities/client.entity';
 import { ClientInput } from './dto/client-input';
 import { User } from 'src/users/entities/user.entity';
-import { UserRole } from 'src/common/role';
+import { UserRole } from 'src/common/enum/role';
 import ErrorMessage from 'src/common/error-message';
 import { UpdateClientInput } from './dto/update-client-input.dto';
 import { AddProjectManagerDto, ProjectManagerResponse } from './dto/add-project-manager.dto';

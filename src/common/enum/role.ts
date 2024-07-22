@@ -10,3 +10,13 @@ export enum UserRole {
 registerEnumType(UserRole, {
   name: 'UserRole', 
 });
+
+export enum ClientTitle {
+  mr = 'Mr',
+  mrs = 'Mrs',
+  ms = 'Ms',  
+}
+
+registerEnumType(ClientTitle, {
+  name: 'ClinetTitle', 
+});

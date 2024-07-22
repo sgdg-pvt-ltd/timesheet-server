@@ -3,7 +3,7 @@ import { OrganizationService } from './organization.service';
 import { Organization } from './entities/organization.entity';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
-import { UserRole } from 'src/common/role';
+import { UserRole } from 'src/common/enum/role';
 import { SwitchUserOrganizationDto } from './dto/switch-user-organization.dto';
 import { OrganizationUsersDto } from './dto/user-organization-list.dto';
 import { UseGuards } from '@nestjs/common';

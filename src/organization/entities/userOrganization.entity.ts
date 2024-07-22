@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, DeleteDa
 import { User } from '../../users/entities/user.entity';
 import { Organization } from './organization.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { UserRole } from 'src/common/role';
+import { UserRole } from 'src/common/enum/role';
 
 @ObjectType()
 @Entity()

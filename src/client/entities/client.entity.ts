@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { ClientTitle } from 'src/common/enum/role';
 import { Projects } from 'src/project/entities/projects.entity';
 import {
   Column,
@@ -25,9 +26,9 @@ export class Client {
   @Field()
   organizationId?: string;
 
-  @Column({nullable: true})
-  @Field({nullable: true})
-  title?: string;
+  @Column({type: 'enum', enum: ClientTitle, nullable: true})
+  @Field(() => ClientTitle, {nullable: true}) 
+  title?: ClientTitle
 
   @Column({nullable: true})
   @Field({nullable: true})

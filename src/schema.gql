@@ -68,7 +68,7 @@ type Client {
   id: ID!
   projectList: [Projects!]
   organizationId: String!
-  title: String
+  title: ClinetTitle
   state: String
   customerDisplayName: String!
   companyName: String!
@@ -81,6 +81,12 @@ type Client {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
+}
+
+enum ClinetTitle {
+  mr
+  mrs
+  ms
 }
 
 type ProjectManagerResponse {
@@ -176,7 +182,7 @@ input ProjectInput {
 }
 
 input ClientInput {
-  title: String
+  title: ClinetTitle
   state: String
   customerDisplayName: String!
   companyName: String!
@@ -188,7 +194,7 @@ input ClientInput {
 }
 
 input UpdateClientInput {
-  title: String
+  title: ClinetTitle
   state: String
   customerDisplayName: String
   companyName: String

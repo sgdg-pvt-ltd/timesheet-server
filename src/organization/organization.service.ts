@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Organization } from './entities/organization.entity';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
-import { UserRole } from 'src/common/role';
+import { UserRole } from 'src/common/enum/role';
 import ErrorMessage from 'src/common/error-message';
 import { User } from 'src/users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';

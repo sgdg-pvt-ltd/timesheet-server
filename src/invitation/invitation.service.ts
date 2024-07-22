@@ -8,7 +8,7 @@ import { Organization } from 'src/organization/entities/organization.entity';
 import ErrorMessage from 'src/common/error-message';
 import { InvitationResponse } from './dto/invitation-response.dto';
 import * as jwt from 'jsonwebtoken';
-import { UserRole } from 'src/common/role';
+import { UserRole } from 'src/common/enum/role';
 import { AcceptInvitationDto } from './dto/accept-invitation.dto';
 import { User } from 'src/users/entities/user.entity';
 import { BcryptService } from 'src/common/modules/bcrypt/bcrypt.service';
